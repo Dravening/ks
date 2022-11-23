@@ -34,7 +34,7 @@ data:
         # wangfei: dt-studio
         location /api/ {
             # proxy_pass http://dt-co-server-dev.hdt.cosmoplat.com;
-            proxy_pass http://dt-studio.yangyuzhe-project:8080;
+            proxy_pass http://dt-studio.yangyuzhe-project.svc:8080;
         }
 
         # proxy the PHP scripts to Apache listening on 127.0.0.1:80

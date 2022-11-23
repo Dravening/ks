@@ -8,7 +8,7 @@ image:
   repository: registry-edge.cosmoplat.com/kubesphere/dt-studio-frontend
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "202210081022"
+  tag: "202211171632"
 
 imagePullSecrets: []
 nameOverride: ""
