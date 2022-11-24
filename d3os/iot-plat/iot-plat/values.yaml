@@ -82,13 +82,13 @@ tolerations: []
 affinity: {}
 
 env:
-  postgresUrl: jdbc:postgresql://pgsql-cdc-iotp-cdcpgsqliotplat.$(MY_NAMESPACE).svc:5432/iotplat
+  postgresUrl: jdbc:postgresql://pgsql-cdc-iotp-cdcpgsqliotplat.$(MY_NAMESPACE):5432/iotplat
   postgresUsername: postgres
-  postgresPassword: Cosmo@2022
+  postgresPassword: password
   #redis or caffeine
   cacheType: redis
   redisConnectionType: standalone
-  redisHost: redis-iotplat-master.$(MY_NAMESPACE)
+  redisHost: redis-iotplat-master.$(MY_NAMESPACE).svc
   redisPort: 6379
   redisNodes:
   redisPassword: Cosmo@2022

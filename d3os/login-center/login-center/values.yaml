@@ -82,7 +82,7 @@ tolerations: []
 affinity: {}
 
 env: 
-  dataResourceUrl: mysql-login-ce-mysql-login-center.$(MY_NAMESPACE).svc:3306/login-center
+  dataResourceUrl: mysql-login-mysql-login-center.$(MY_NAMESPACE).svc:3306/login-center
   dataResourceUsername: d3os
   dataResourcePassword: d3os@cosmoplat
   redisUrl: redis-login-master.$(MY_NAMESPACE).svc
