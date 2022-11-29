@@ -1,0 +1,26 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: redis-analysis
+  namespace: {{ .Values.env.namespace }}
+  labels:
+    app.kubernetes.io/instance: redis-analysis
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: redis
+    app.kubernetes.io/version: 6.0.9
+    app.kubesphere.io/instance: redis-analysis
+    helm.sh/chart: redis-0.3.5
+  annotations:
+    meta.helm.sh/release-name: redis-analysis
+    meta.helm.sh/release-namespace: {{ .Values.env.namespace }}
+spec:
+  ports:
+    - name: redis
+      protocol: TCP
+      port: 6379
+      targetPort: redis
+  selector:
+    app.kubernetes.io/instance: redis-analysis
+    app.kubernetes.io/name: redis
+  clusterIP: None
+  type: ClusterIP

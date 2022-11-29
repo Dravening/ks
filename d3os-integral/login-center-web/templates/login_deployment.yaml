@@ -1,0 +1,84 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: login-center
+  namespace: {{ .Values.env.namespace }}
+  labels:
+    app.kubernetes.io/instance: login-center
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: login-center
+    app.kubernetes.io/version: 1.16.0
+    app.kubesphere.io/instance: login-center
+    helm.sh/chart: login-center-0.2.0
+  annotations:
+    deployment.kubernetes.io/revision: '1'
+    meta.helm.sh/release-name: login-center
+    meta.helm.sh/release-namespace: {{ .Values.env.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: login-center
+      app.kubernetes.io/name: login-center
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/instance: login-center
+        app.kubernetes.io/name: login-center
+    spec:
+      containers:
+        - name: login-center
+          image: 'registry-edge.cosmoplat.com/kubesphere/login-center:0.0.57'
+          ports:
+            - name: http
+              containerPort: 8081
+              protocol: TCP
+          env:
+            - name: MY_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+            - name: DATASOURCE_URL
+              value: >-
+                mysql-login-mysql-login-center.$(MY_NAMESPACE).svc:3306/login-center
+            - name: DATASOURCE_USERNAME
+              value: d3os
+            - name: DATASOURCE_PASSWORD
+              value: d3os@cosmoplat
+            - name: REDIS_URL
+              value: redis-login.$(MY_NAMESPACE).svc
+            - name: REDIS_PORT
+              value: '6379'
+            - name: REDIS_PASSWORD
+              value: ''
+            - name: DEADLINE_TIME
+              value: '6'
+            - name: OPEN
+              value: 'true'
+            - name: TENANT_ID
+              value: 53837240-3025-11ed-a60b-5f28a72be0bf
+            - name: IOT_USERNAME
+              value: sysadmin@haier.com
+            - name: IOT_PASSWORD
+              value: sysadmin
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+          securityContext: {}
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      serviceAccountName: login-center
+      serviceAccount: login-center
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600

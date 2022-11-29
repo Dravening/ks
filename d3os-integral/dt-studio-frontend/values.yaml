@@ -82,4 +82,4 @@ tolerations: []
 affinity: {}
 
 env:
-  namespace: yyz-project
+  namespace: 'please-enter-your-namespace'

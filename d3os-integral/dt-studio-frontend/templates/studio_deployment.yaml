@@ -1,0 +1,99 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: dt-studio
+  namespace: {{ .Values.env.namespace }}
+  labels:
+    app.kubernetes.io/instance: dt-studio
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: dt-studio
+    app.kubernetes.io/version: 1.16.0
+    app.kubesphere.io/instance: dt-studio
+    helm.sh/chart: dt-studio-0.1.2
+  annotations:
+    deployment.kubernetes.io/revision: '1'
+    meta.helm.sh/release-name: dt-studio
+    meta.helm.sh/release-namespace: {{ .Values.env.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: dt-studio
+      app.kubernetes.io/name: dt-studio
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/instance: dt-studio
+        app.kubernetes.io/name: dt-studio
+    spec:
+      containers:
+        - name: dt-studio
+          image: 'registry-edge.cosmoplat.com/kubesphere/dt-studio:202211230225'
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: websocket
+              containerPort: 7999
+              protocol: TCP
+          env:
+            - name: MY_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+            - name: DATASOURCE_URL
+              value: >-
+                mysql-studio-mysql-dt-studio.$(MY_NAMESPACE):3306/dt-commercialization
+            - name: DATASOURCE_USERNAME
+              value: d3os
+            - name: DATASOURCE_PASSWORD
+              value: d3os@cosmoplat
+            - name: REDIS_HOST
+              value: redis-studio.$(MY_NAMESPACE).svc
+            - name: REDIS_PORT
+              value: '6379'
+            - name: REDIS_PASSWORD
+              value: ''
+            - name: REDIS_DATABASE
+              value: '0'
+            - name: MINIO_HOST
+              value: 'http://minio.$(MY_NAMESPACE).svc:9000'
+            - name: MINIO_BUCKET
+              value: model-file-bucket
+            - name: MINIO_ACCESS_KEY
+              value: YOURACCESSKEY
+            - name: MINIO_SECRET_KEY
+              value: YOURSECRETKEY
+            - name: DATAEASE_ADDR
+              value: 'http://data-analysis.$(MY_NAMESPACE).svc:8081'
+            - name: IOT_URL
+              value: 'http://iot-plat.$(MY_NAMESPACE).svc:8080'
+            - name: LOGIN_URL
+              value: 'http://login-center.$(MY_NAMESPACE).svc:8081'
+            - name: USER_FLAG
+              value: 'false'
+            - name: USER_EXPIRETIME
+              value: '600'
+            - name: USER_EXPIREINITTIME
+              value: '3600'
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+          securityContext: {}
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      serviceAccountName: dt-studio
+      serviceAccount: dt-studio
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600

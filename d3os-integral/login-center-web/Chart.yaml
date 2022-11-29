@@ -1,0 +1,9 @@
+apiVersion: v2
+appVersion: 1.16.0
+description: login-center-web
+  这是一个整体包，包含login-center-web、login-center、redis-login、mysql-login四个服务。
+  服务没有配置hpa，故推荐仅在测试环境使用。
+  且每个workspace的每个项目中仅能部署一次。
+name: login-center-web
+type: application
+version: 4.0.0

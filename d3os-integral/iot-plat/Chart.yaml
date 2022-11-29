@@ -1,6 +1,9 @@
 apiVersion: v2
-name: dt-studio-frontend
-description: dt-studio-frontend
+name: iot-plat
+description: iot-plat
+  这是一个整体包，包含iot-plat、pgsql-iotplat、redis-iotplat三个服务。
+  服务没有配置hpa，故推荐仅在测试环境使用。
+  且每个workspace的每个项目中仅能部署一次。
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -15,7 +18,7 @@ type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.1.3
+version: 4.0.0
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to

@@ -1,0 +1,58 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: mysql-studio-mysql-dt-studio
+  namespace: {{ .Values.env.namespace }}
+  labels:
+    app.kubernetes.io/instance: mysql-studio
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: mysql-dt-studio
+    app.kubernetes.io/version: v0.1.0
+    app.kubesphere.io/instance: mysql-studio
+    helm.sh/chart: mysql-dt-studio-0.1.0
+  annotations:
+    deployment.kubernetes.io/revision: '1'
+    meta.helm.sh/release-name: mysql-studio
+    meta.helm.sh/release-namespace: {{ .Values.env.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: mysql-studio
+      app.kubernetes.io/name: mysql-dt-studio
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/instance: mysql-studio
+        app.kubernetes.io/name: mysql-dt-studio
+    spec:
+      containers:
+        - name: mysql-dt-studio
+          image: 'registry-edge.cosmoplat.com/d3os/mysql-dt-studio:v0.1.0'
+          ports:
+            - name: http
+              containerPort: 3306
+              protocol: TCP
+          env:
+            - name: TZ
+              value: Asia/Shanghai
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+          securityContext: {}
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      serviceAccountName: mysql-studio-mysql-dt-studio
+      serviceAccount: mysql-studio-mysql-dt-studio
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600

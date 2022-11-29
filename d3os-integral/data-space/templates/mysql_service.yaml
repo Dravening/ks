@@ -1,0 +1,27 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: mysql-space-mysql-data-space
+  namespace: {{ .Values.env.namespace }}
+  labels:
+    app.kubernetes.io/instance: mysql-space
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: mysql-data-space
+    app.kubernetes.io/version: v0.1.1
+    app.kubesphere.io/instance: mysql-space
+    helm.sh/chart: mysql-data-space-0.1.1
+  annotations:
+    meta.helm.sh/release-name: mysql-space
+    meta.helm.sh/release-namespace: {{ .Values.env.namespace }}
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3306
+      targetPort: http
+  selector:
+    app.kubernetes.io/instance: mysql-space
+    app.kubernetes.io/name: mysql-data-space
+  clusterIP: None
+  type: ClusterIP
+

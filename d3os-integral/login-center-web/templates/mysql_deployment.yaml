@@ -1,0 +1,68 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: mysql-login-mysql-login-center
+  namespace: {{ .Values.env.namespace }}
+  labels:
+    app.kubernetes.io/instance: mysql-login
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: mysql-login-center
+    app.kubernetes.io/version: v0.1.1
+    app.kubesphere.io/instance: mysql-login
+    helm.sh/chart: mysql-login-center-0.1.1
+  annotations:
+    deployment.kubernetes.io/revision: '1'
+    meta.helm.sh/release-name: mysql-login
+    meta.helm.sh/release-namespace: {{ .Values.env.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: mysql-login
+      app.kubernetes.io/name: mysql-login-center
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/instance: mysql-login
+        app.kubernetes.io/name: mysql-login-center
+    spec:
+      containers:
+        - name: mysql-login-center
+          image: 'registry-edge.cosmoplat.com/d3os/mysql-login-center:v0.1.1'
+          securityContext:
+            privileged: true
+          ports:
+            - name: http
+              containerPort: 3306
+              protocol: TCP
+          env:
+            - name: TZ
+              value: Asia/Shanghai
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - "/bin/sh"
+                  - "-c"
+                  - >
+                    sleep 10s;
+                    mysql -ud3os -pd3os@cosmoplat -e "use login-center;update base_system set state=0, domain_name='http://iot-plat.{{ .Values.env.namespace }}.svc:8080' where id = 1;update base_system set state=0, domain_name='http://dt-studio.{{ .Values.env.namespace }}.svc:8080' where id = 2;update base_system set state=0, domain_name='http://data-space.{{ .Values.env.namespace }}.svc:18630' where id = 4;update base_system set state=0, domain_name='http://data-analysis.{{ .Values.env.namespace }}.svc:8081' where id = 5;"
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      serviceAccountName: mysql-login-mysql-login-center
+      serviceAccount: mysql-login-mysql-login-center
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600

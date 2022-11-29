@@ -1,14 +1,14 @@
-# Default values for dt-studio-frontend.
+# Default values for data-analysis.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: registry-edge.cosmoplat.com/kubesphere/dt-studio-frontend
+  repository: registry-edge.cosmoplat.com/kubesphere/data-analysis
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "202211171632"
+  tag: "20220929"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -38,7 +38,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 80
+  port: 8081
 
 ingress:
   enabled: false
@@ -82,4 +82,16 @@ tolerations: []
 affinity: {}
 
 env:
-  namespace: yyz-project
+  namespace: 'please-enter-your-namespace'
+  mysql_user: 'd3os'
+  mysql_password: 'd3os@cosmoplat'
+  mysql_ip_port: 'mysql-analysis-mysql-data-analysis.$(MY_NAMESPACE).svc:3306'
+  mysql_database: 'dataease'
+  minio_host: 'http://minio.$(MY_NAMESPACE).svc:9000'
+  minio_bucket: 'dataease'
+  dt_studio_host: 'http://dt-studio.$(MY_NAMESPACE).svc:8080'
+  share_address_url: 'http://data-analysis.$(MY_NAMESPACE).svc:8081/link/'
+  redis_host: 'redis-analysis.$(MY_NAMESPACE).svc'
+  redis_port: '6379'
+  redis_password: ''
+  redis_database: '0'

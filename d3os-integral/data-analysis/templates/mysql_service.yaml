@@ -1,0 +1,26 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: mysql-analysis-mysql-data-analysis
+  namespace: {{ .Values.env.namespace }}
+  labels:
+    app.kubernetes.io/instance: mysql-analysis
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: mysql-data-analysis
+    app.kubernetes.io/version: v0.1.0
+    app.kubesphere.io/instance: mysql-analysis
+    helm.sh/chart: mysql-data-analysis-0.1.0
+  annotations:
+    meta.helm.sh/release-name: mysql-analysis
+    meta.helm.sh/release-namespace: {{ .Values.env.namespace }}
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3306
+      targetPort: http
+  selector:
+    app.kubernetes.io/instance: mysql-analysis
+    app.kubernetes.io/name: mysql-data-analysis
+  clusterIP: None
+  type: ClusterIP

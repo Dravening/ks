@@ -1,0 +1,27 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: mysql-login-mysql-login-center
+  namespace: {{ .Values.env.namespace }}
+  labels:
+    app.kubernetes.io/instance: mysql-login
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: mysql-login-center
+    app.kubernetes.io/version: v0.1.1
+    app.kubesphere.io/instance: mysql-login
+    helm.sh/chart: mysql-login-center-0.1.1
+  annotations:
+    meta.helm.sh/release-name: mysql-login
+    meta.helm.sh/release-namespace: {{ .Values.env.namespace }}
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3306
+      targetPort: http
+  selector:
+    app.kubernetes.io/instance: mysql-login
+    app.kubernetes.io/name: mysql-login-center
+  clusterIP: None
+  type: ClusterIP
+

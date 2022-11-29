@@ -1,0 +1,26 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: mysql-studio-mysql-dt-studio
+  namespace: {{ .Values.env.namespace }}
+  labels:
+    app.kubernetes.io/instance: mysql-studio
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: mysql-dt-studio
+    app.kubernetes.io/version: v0.1.0
+    app.kubesphere.io/instance: mysql-studio
+    helm.sh/chart: mysql-dt-studio-0.1.0
+  annotations:
+    meta.helm.sh/release-name: mysql-studio
+    meta.helm.sh/release-namespace: {{ .Values.env.namespace }}
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3306
+      targetPort: http
+  selector:
+    app.kubernetes.io/instance: mysql-studio
+    app.kubernetes.io/name: mysql-dt-studio
+  clusterIP: None
+  type: ClusterIP

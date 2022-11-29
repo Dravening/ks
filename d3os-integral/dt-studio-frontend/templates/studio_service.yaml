@@ -1,0 +1,30 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: dt-studio
+  namespace: {{ .Values.env.namespace }}
+  labels:
+    app.kubernetes.io/instance: dt-studio
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: dt-studio
+    app.kubernetes.io/version: 1.16.0
+    app.kubesphere.io/instance: dt-studio
+    helm.sh/chart: dt-studio-0.1.2
+  annotations:
+    meta.helm.sh/release-name: dt-studio
+    meta.helm.sh/release-namespace: {{ .Values.env.namespace }}
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: http
+    - name: websocket
+      protocol: TCP
+      port: 7999
+      targetPort: http
+  selector:
+    app.kubernetes.io/instance: dt-studio
+    app.kubernetes.io/name: dt-studio
+  clusterIP: None
+  type: ClusterIP
