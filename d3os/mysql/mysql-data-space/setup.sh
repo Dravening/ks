@@ -1,6 +1,4 @@
 #!/bin/bash
-set -e
-
 echo "service mysql status"
 
 echo 'starting mysql....'
@@ -10,19 +8,25 @@ sleep 1
 
 echo "service mysql status"
 
-echo 'data.sql importing....'
-mysql < /mysql/sql/data.sql
-echo 'data.sql imported....'
+exist=`mysql -e 'show databases;' | grep 'datathread'`;
 
-sleep 1
+if [ ! -n "$exist"  ];then
+  echo 'data.sql importing....'
+  mysql < /mysql/sql/data.sql
+  echo 'data.sql imported....'
 
-echo 'privileges.sql importing....'
-mysql < /mysql/sql/privileges.sql
-echo 'privileges.sql imported....'
+  sleep 1;
 
-sleep 1
+  echo 'privileges.sql importing....'
+  mysql < /mysql/sql/privileges.sql
+  echo 'privileges.sql imported....'
 
-echo "service mysql status"
+  sleep 1;
+
+  echo "service mysql status"
+else
+  echo 'datathread exist.no need to init.'
+fi;
+
 echo "success!"
-
-tail -f /dev/null
+tail -f /dev/null;
