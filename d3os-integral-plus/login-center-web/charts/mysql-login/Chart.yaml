@@ -1,0 +1,6 @@
+apiVersion: v2
+appVersion: v0.1.2
+description: mysql-login
+name: mysql-login
+type: application
+version: 0.1.2

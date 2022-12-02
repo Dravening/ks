@@ -1,17 +1,16 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
-  name: {{ include "mysql-space.fullname" . }}
+  name: {{ include "dt-studio-web.fullname" . }}
   labels:
-    {{- include "mysql-space.labels" . | nindent 4 }}
+    {{- include "dt-studio-web.labels" . | nindent 4 }}
 spec:
-  serviceName: {{ .Values.service.name }}
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "mysql-space.selectorLabels" . | nindent 6 }}
+      {{- include "dt-studio-web.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -19,13 +18,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "mysql-space.selectorLabels" . | nindent 8 }}
+        {{- include "dt-studio-web.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "mysql-space.serviceAccountName" . }}
+      serviceAccountName: {{ include "dt-studio-web.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -34,31 +33,25 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          env:
-            - name: TZ
-              value: Asia/Shanghai
           ports:
             - name: http
-              containerPort: {{ .Values.service.port | default 3306 }}
+              containerPort: {{ .Values.service.port | default 80 }}
               protocol: TCP
-          {{- if .Values.persistence.enabled }}
-          volumeMounts:
-            - name: data
-              mountPath: /var/lib/mysql
-          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-  {{- if .Values.persistence.enabled }}
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes:
-          - {{ .Values.persistence.accessMode }}
-        resources:
-          requests:
-            storage: {{ .Values.persistence.size }}
-  {{- end }}
+          volumeMounts:
+#            - name: host-time
+#              readOnly: true
+#              mountPath: /etc/localtime
+            - name: nginx
+              mountPath: /etc/nginx/conf.d/
+      volumes:
+        - name: nginx
+          configMap:
+            name: nginx
+            items:
+              - key: default.conf
+                path: default.conf
 
       {{- with .Values.nodeSelector }}
       nodeSelector:

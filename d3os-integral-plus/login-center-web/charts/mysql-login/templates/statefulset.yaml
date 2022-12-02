@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "mysql-space.fullname" . }}
+  name: {{ include "mysql-login.fullname" . }}
   labels:
-    {{- include "mysql-space.labels" . | nindent 4 }}
+    {{- include "mysql-login.labels" . | nindent 4 }}
 spec:
   serviceName: {{ .Values.service.name }}
   {{- if not .Values.autoscaling.enabled }}
@@ -11,7 +11,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "mysql-space.selectorLabels" . | nindent 6 }}
+      {{- include "mysql-login.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -19,13 +19,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "mysql-space.selectorLabels" . | nindent 8 }}
+        {{- include "mysql-login.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "mysql-space.serviceAccountName" . }}
+      serviceAccountName: {{ include "mysql-login.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -39,8 +39,18 @@ spec:
               value: Asia/Shanghai
           ports:
             - name: http
-              containerPort: {{ .Values.service.port | default 3306 }}
+              containerPort: {{ .Values.service.port | default 80 }}
               protocol: TCP
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - "/bin/sh"
+                  - "-c"
+                  - >
+                    sleep 10s;
+                    mysql -ud3os -pd3os@cosmoplat -e "use login-center;update base_system set state=0, domain_name='http://iot-plat.{{ .Release.Namespace }}.svc:8080' where id = 1;update base_system set state=0, domain_name='http://dt-studio.{{ .Release.Namespace }}.svc:8080' where id = 2;update base_system set state=0, domain_name='http://data-space.{{ .Release.Namespace }}.svc:18630' where id = 4;update base_system set state=0, domain_name='http://data-analysis.{{ .Release.Namespace }}.svc:8081' where id = 5;"
+
           {{- if .Values.persistence.enabled }}
           volumeMounts:
             - name: data
@@ -59,7 +69,6 @@ spec:
           requests:
             storage: {{ .Values.persistence.size }}
   {{- end }}
-
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "mysql-space.fullname" . }}
+  name: {{ include "mysql-analysis.fullname" . }}
   labels:
-    {{- include "mysql-space.labels" . | nindent 4 }}
+    {{- include "mysql-analysis.labels" . | nindent 4 }}
 spec:
   serviceName: {{ .Values.service.name }}
   {{- if not .Values.autoscaling.enabled }}
@@ -11,7 +11,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "mysql-space.selectorLabels" . | nindent 6 }}
+      {{- include "mysql-analysis.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -19,13 +19,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "mysql-space.selectorLabels" . | nindent 8 }}
+        {{- include "mysql-analysis.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "mysql-space.serviceAccountName" . }}
+      serviceAccountName: {{ include "mysql-analysis.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -39,7 +39,7 @@ spec:
               value: Asia/Shanghai
           ports:
             - name: http
-              containerPort: {{ .Values.service.port | default 3306 }}
+              containerPort: {{ .Values.service.port | default 80 }}
               protocol: TCP
           {{- if .Values.persistence.enabled }}
           volumeMounts:

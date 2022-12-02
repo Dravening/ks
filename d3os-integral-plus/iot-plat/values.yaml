@@ -1,18 +1,18 @@
-# Default values for mysql-space.
+# Default values for iot-plat.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: registry-edge.cosmoplat.com/d3os/mysql-data-space
+  repository: registry-edge.cosmoplat.com/kubesphere/openiot
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v0.1.2"
+  tag: "v0.1.0"
 
 imagePullSecrets: []
 nameOverride: ""
-fullnameOverride: "mysql-space"
+fullnameOverride: "iot-plat"
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -37,9 +37,9 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: ClusterIP
-  name: mysql-space
-  port: 3306
+  type: NodePort
+  port: 8080
+  nodeport: 31880
 
 ingress:
   enabled: false
@@ -82,7 +82,19 @@ tolerations: []
 
 affinity: {}
 
-persistence:
-  enabled: true
-  accessMode: ReadWriteOnce
-  size: 8Gi
+env:
+  postgresUrl: jdbc:postgresql://pgsql-iotplat.$(MY_NAMESPACE):5432/iotplat
+  postgresUsername: postgres
+  postgresPassword: password
+  #redis or caffeine
+  cacheType: redis
+  redisConnectionType: standalone
+  redisHost: redis-iotplat.$(MY_NAMESPACE).svc
+  redisPort: 6379
+  redisNodes:
+  redisPassword: ''
+  #kafka or in-memory
+  iotQueueType: kafka
+  iotKafkaServers: kafka.$(MY_NAMESPACE).svc:9092
+  useUuc: false
+  uucAuthUrl:

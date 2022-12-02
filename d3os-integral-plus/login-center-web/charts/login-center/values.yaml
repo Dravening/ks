@@ -1,18 +1,18 @@
-# Default values for mysql-space.
+# Default values for login-center.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: registry-edge.cosmoplat.com/d3os/mysql-data-space
+  repository: registry-edge.cosmoplat.com/kubesphere/login-center
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v0.1.2"
+  tag: "0.0.57"
 
 imagePullSecrets: []
 nameOverride: ""
-fullnameOverride: "mysql-space"
+fullnameOverride: "login-center"
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -38,8 +38,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  name: mysql-space
-  port: 3306
+  port: 8081
 
 ingress:
   enabled: false
@@ -82,7 +81,16 @@ tolerations: []
 
 affinity: {}
 
-persistence:
-  enabled: true
-  accessMode: ReadWriteOnce
-  size: 8Gi
+env: 
+  dataResourceUrl: mysql-login.$(MY_NAMESPACE).svc:3306/login-center
+  dataResourceUsername: d3os
+  dataResourcePassword: d3os@cosmoplat
+  redisUrl: redis-login.$(MY_NAMESPACE).svc
+  redisPort: 6379
+  redisPassword: ''
+  deadlineTime: 6
+  open: true
+  tenantId: 53837240-3025-11ed-a60b-5f28a72be0bf
+  iotUsername: sysadmin@haier.com
+  iotPassword: sysadmin
+

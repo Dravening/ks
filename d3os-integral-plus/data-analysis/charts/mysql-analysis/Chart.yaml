@@ -1,0 +1,6 @@
+apiVersion: v2
+appVersion: v0.1.1
+description: mysql-analysis
+name: mysql-analysis
+type: application
+version: 0.1.1

@@ -1,18 +1,18 @@
-# Default values for mysql-space.
+# Default values for mysql-studio.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: registry-edge.cosmoplat.com/d3os/mysql-data-space
+  repository: registry-edge.cosmoplat.com/d3os/mysql-dt-studio
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "v0.1.2"
 
 imagePullSecrets: []
 nameOverride: ""
-fullnameOverride: "mysql-space"
+fullnameOverride: "mysql-studio"
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -38,7 +38,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  name: mysql-space
+  name: mysql-studio
   port: 3306
 
 ingress:

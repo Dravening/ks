@@ -1,18 +1,18 @@
-# Default values for mysql-space.
+# Default values for dt-studio-web.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: registry-edge.cosmoplat.com/d3os/mysql-data-space
+  repository: registry-edge.cosmoplat.com/kubesphere/dt-studio-frontend
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v0.1.2"
+  tag: "202211171632"
 
 imagePullSecrets: []
 nameOverride: ""
-fullnameOverride: "mysql-space"
+fullnameOverride: "dt-studio-web"
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -37,9 +37,9 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: ClusterIP
-  name: mysql-space
-  port: 3306
+  type: NodePort
+  port: 80
+  nodeport: 30080
 
 ingress:
   enabled: false
@@ -81,8 +81,3 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
-persistence:
-  enabled: true
-  accessMode: ReadWriteOnce
-  size: 8Gi
