@@ -57,17 +57,15 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources: {}
+resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+  limits:
+    memory: 5Gi
+  requests:
+    memory: 3Gi
 
 autoscaling:
   enabled: false
@@ -86,7 +84,7 @@ env:
   mysql_user: 'd3os'
   mysql_password: 'd3os@cosmoplat'
   mysql_ip_port: 'mysql-analysis.$(MY_NAMESPACE).svc:3306'
-  mysql_database: 'dataease'
+  mysql_database: 'data_analysis_demo'
   minio_host: 'http://minio.$(MY_NAMESPACE).svc:9000'
   minio_bucket: 'dataease'
   dt_studio_host: 'http://dt-studio.$(MY_NAMESPACE).svc:8080'

@@ -39,30 +39,10 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.namespace
-            - name: mysql_user
-              value: {{ .Values.env.mysql_user }}
-            - name: mysql_password
-              value: {{ .Values.env.mysql_password }}
-            - name: mysql_ip_port
-              value: {{ .Values.env.mysql_ip_port }}
-            - name: mysql_database
-              value: {{ .Values.env.mysql_database }}
-            - name: minio_host
-              value: {{ .Values.env.minio_host }}
-            - name: minio_bucket
-              value: {{ .Values.env.minio_bucket }}
-            - name: dt_studio_host
-              value: {{ .Values.env.dt_studio_host }}
-            - name: share_address_url
-              value: {{ .Values.env.share_address_url }}
-            - name: redis_host
-              value: {{ .Values.env.redis_host }}
-            - name: redis_port
-              value: {{ .Values.env.redis_port | quote }}
-            - name: redis_password
-              value: {{ .Values.env.redis_password }}
-            - name: redis_database
-              value: {{ .Values.env.redis_database | quote }}
+            {{- range $key, $val := .Values.env }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+            {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port | default 80 }}

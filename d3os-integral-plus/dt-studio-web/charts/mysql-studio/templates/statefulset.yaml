@@ -41,13 +41,22 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port | default 3306 }}
               protocol: TCP
-          {{- if .Values.persistence.enabled }}
           volumeMounts:
+            - name: cnf
+              mountPath: /etc/mysql/conf.d
+          {{- if .Values.persistence.enabled }}
             - name: data
               mountPath: /var/lib/mysql
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: cnf
+          configMap:
+            name: cnf
+            items:
+              - key: my.cnf
+                path: my.cnf
   {{- if .Values.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:
