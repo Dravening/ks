@@ -1,6 +1,6 @@
 image:
   repository: registry-edge.cosmoplat.com/kubesphere/cdcpgsqliotplat
-  tag: "20230104"
+  tag: "latest"
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []

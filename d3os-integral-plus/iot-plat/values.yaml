@@ -8,7 +8,7 @@ image:
   repository: registry-edge.cosmoplat.com/kubesphere/openiot
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "20230103"
+  tag: "latest"
 
 imagePullSecrets: []
 nameOverride: ""

@@ -5,10 +5,10 @@
 replicaCount: 1
 
 image:
-  repository: registry-edge.cosmoplat.com/kubesphere/dataspace
+  repository: registry.cn-hangzhou.aliyuncs.com/penglifeng_work/haier_datathread
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "2022112311"
+  tag: "lastest"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -37,9 +37,8 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: NodePort
+  type: ClusterIP
   port: 18630
-  nodeport: 30630
 
 ingress:
   enabled: false
@@ -81,4 +80,3 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-

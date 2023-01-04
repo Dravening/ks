@@ -27,17 +27,22 @@ spec:
       serviceAccountName: {{ include "data-space.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      # wangfei: volume
       volumes:
       - name: configs
         configMap:
           name: {{ template "data-space.fullname" . }}
+      - name: configs-web
+        configMap:
+          name: {{ template "data-space.fullname" . }}-web
       containers:
         - name: {{ .Chart.Name }}
-          # wangfei: volume
           volumeMounts:
           - name: configs
-            mountPath: /etc/sdc/
+            mountPath: /etc/sdc/database-realm.properties
+            subPath: database-realm.properties
+          - name: configs-web
+            mountPath: /opt/streamsets-datacollector-3.22.3-SNAPSHOT/sdc-static-web/src/main/webapp/HaierCasConfig.js
+            subPath: HaierCasConfig.js
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
