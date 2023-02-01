@@ -6,4 +6,4 @@ description: login-center-web
   且每个workspace的每个项目中仅能部署一次。
 name: login-center-web
 type: application
-version: 4.0.1
+version: 4.1.0

@@ -5,10 +5,10 @@
 replicaCount: 1
 
 image:
-  repository: registry.cn-hangzhou.aliyuncs.com/penglifeng_work/haier_datathread
+  repository: registry-edge.cosmoplat.com/d3os/data-space
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "lastest"
+  tag: "20221228"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -37,7 +37,7 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: ClusterIP
+  type: NodePort
   port: 18630
 
 ingress:

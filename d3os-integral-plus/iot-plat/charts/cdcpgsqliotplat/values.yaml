@@ -1,5 +1,6 @@
 image:
   repository: registry-edge.cosmoplat.com/kubesphere/cdcpgsqliotplat
+  # registry-edge.cosmoplat.com/kubesphere/cdcpgsqliotplat:v0.1.3
   tag: "latest"
   pullPolicy: IfNotPresent
 
