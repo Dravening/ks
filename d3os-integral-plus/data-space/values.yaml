@@ -5,10 +5,10 @@
 replicaCount: 1
 
 image:
-  repository: registry-edge.cosmoplat.com/d3os/data-space
+  repository: registry.cn-hangzhou.aliyuncs.com/penglifeng_work/haier_datathread:latest
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "20221228"
+  tag: "latest"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -80,3 +80,13 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+  dataservice/datasource
+  dataservice/api-manager
+  dataservice/gateway/master
+  dataservice/auth
+  dataservice/proxy
+  dataservice/gateway/web
+  dataservice/adapter/3rd-adapter
+  dataservice/adapter/ds-adapter
+  dataservice/adapter/es-adapter

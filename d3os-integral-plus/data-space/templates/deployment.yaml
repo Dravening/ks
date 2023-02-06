@@ -41,8 +41,8 @@ spec:
             mountPath: /etc/sdc/database-realm.properties
             subPath: database-realm.properties
           - name: configs-web
-            mountPath: /opt/streamsets-datacollector-3.22.3-SNAPSHOT/sdc-static-web/src/main/webapp/HaierCasConfig.js
-            subPath: HaierCasConfig.js
+            mountPath: /opt/streamsets-datacollector-3.22.3-SNAPSHOT/sdc-static-web/app.config.js
+            subPath: app.config.js
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"

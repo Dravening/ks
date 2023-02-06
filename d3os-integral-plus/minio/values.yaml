@@ -208,8 +208,12 @@ readinessProbe:
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
 ##
 resources:
-  requests:
+  limits:
+    cpu: 500m
     memory: 4Gi
+  requests:
+    cpu: 100m
+    memory: 1Gi
 
 ## Create a bucket after minio install
 ##

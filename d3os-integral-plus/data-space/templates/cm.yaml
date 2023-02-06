@@ -43,95 +43,23 @@ metadata:
     release: '{{ .Release.Name }}'
     heritage: '{{ .Release.Service }}'
 data:
-  HaierCasConfig.js: |-
-    var qs = window.Qs;
-
+  app.config.js: |-
     /**
-     * Haier cas单点登录相关功能改造配置
+     * 海尔 应用配置文件  StreamSet
      */
-
-    window.HAIER_CONFIG = {
-      // 是否开启cas方式
-      CAS_IS_OPEN: true,
-      //  cas的地址
-      CAS_URL: "https://id.cosmoplat.com/d3uc/login/",
-      // cas的query参数-重定向地址的key
-      CAS_URL_PARAMS_REDIRECT: "redirect_url",
-      // cas的query参数-类型的key
-      CAS_URL_PARAMS_TYPE: "auto",
-      CAS_URL_PARAMS_TYPE_GET: 1, // 获取token
-      CAS_URL_PARAMS_TYPE_LOGOUT: 2, // 退出
-      // cas平台返回的query参数-token的key
-      CAS_RETURN_TOKEN_NAME: "access_token",
+    window.HAIER_APP_CONFIG = {
+      // 系统标识 不要改
+      APP: 'StreamSet',
+      // 单点登录: 是否开启UUC单点登录 共享Cookie方式 与【UUC_IS_OPEN】配置互斥
+      UUC_IS_OPEN_PUBLIC_COOKIE: false,
+      // 单点登录: 是否开启UUC单点登录 跳转方式 与【UUC_IS_OPEN_PUBLIC_COOKIE】配置互斥
+      UUC_IS_OPEN: true,
+      // 单点登录: UUC统一登录地址
+      UUC_URL: "http://id.cosmoplat.com/d3uc/login/",
+      // UI: favicon.ico图标  如果为空字符显示原系统图标
+      UI_FAVICON:'',
+      // UI: logo图片地址 如果为空字符显示原系统图标
+      UI_LOGO_URL: '',
+      // UI: logo名称 如果logo是带标题的,那么不用加
+      UI_LOGO_TITLE: ''
     };
-
-    // 1.登录
-    window.haierCasLogin = function () {
-      if (window.HAIER_CONFIG.CAS_IS_OPEN) {
-        gotoCasByType();
-      }
-    };
-
-    // 2.刷新
-    window.haierCasGet = async function () {
-      if (window.HAIER_CONFIG.CAS_IS_OPEN) {
-        const queryObj = qs.parse(location.search.slice(1));
-
-        const isHavekey = Object.prototype.hasOwnProperty.call(
-          queryObj,
-          window.HAIER_CONFIG.CAS_RETURN_TOKEN_NAME
-        );
-
-        // 防止重复刷新跳转
-        if (!isHavekey) {
-          gotoCasByType(window.HAIER_CONFIG.CAS_URL_PARAMS_TYPE_GET);
-        } else {
-          await goToLoginOrigin(queryObj);
-        }
-      }
-    };
-
-    // 3.退出
-    window.haierCasLogout = function () {
-      if (window.HAIER_CONFIG.CAS_IS_OPEN) {
-        gotoCasByType(window.HAIER_CONFIG.CAS_URL_PARAMS_TYPE_LOGOUT);
-      }
-    };
-
-    // 跳转到cas页面 并区分类型
-    function gotoCasByType(type) {
-      if (window.HAIER_CONFIG.CAS_IS_OPEN) {
-        const queryStr = qs.stringify({
-          [window.HAIER_CONFIG.CAS_URL_PARAMS_REDIRECT]:
-            window.location.origin + window.location.pathname,
-          [window.HAIER_CONFIG.CAS_URL_PARAMS_TYPE]: type,
-        });
-        window.location.href = window.HAIER_CONFIG.CAS_URL + "?" + queryStr;
-      }
-    }
-
-    // StreamSet特殊点   刷新即又去登录下
-    async function goToLoginOrigin(queryObj) {
-      const casToken = queryObj[window.HAIER_CONFIG.CAS_RETURN_TOKEN_NAME];
-
-      const loginUrl = `/j_security_check?j_username=${casToken}&j_password=${casToken}`;
-      // const loginUrl = `/j_security_check?j_username=${"admin"}&j_password=${"Cosmo_1!"}`;
-
-      try {
-        const res = await fetch(loginUrl, {
-          method: "GET",
-          redirect: "manual",
-        });
-        if (res.type === "opaqueredirect") {
-          // 登录成功
-          history.pushState(null, null, location.pathname);
-        } else {
-          // 登录失败
-          alert("登录失败: 可能是用户不存在!");
-          window.haierCasLogout();
-        }
-      } catch (error) {
-        history.pushState(null, null, location.pathname);
-        alert("本系统 登录接口 异常错误");
-      }
-    }

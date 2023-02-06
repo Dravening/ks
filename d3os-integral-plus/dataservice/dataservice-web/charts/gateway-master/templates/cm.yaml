@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "gateway-master.fullname" . }}
+  labels:
+    app: {{ template "gateway-master.fullname" . }}
+    chart: '{{ .Chart.Name }}-{{ .Chart.Version }}'
+    release: '{{ .Release.Name }}'
+    heritage: '{{ .Release.Service }}'
+data:
+  application.yml: |-
+    server:
+      port: 9184
+    zuul:
+      sensitiveHeaders: Access-Control-Allow-Origin,Access-Control-Allow-Methods
+      prefix: /services
+    ribbon:
+      ReadTimeout: 10000
+      ConnectTimeout: 10000
+
+
+    spring:
+      liquibase:
+        enabled: false
+        change-log: classpath:/db/change-log/change-log-master.yml
+      datasource:
+        url: jdbc:mysql://mysql-dataservice.{{ .Release.Namespace }}.svc:3306/cosmo_gateway?characterEncoding=utf-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai
+        username: d3os
+        password: d3os@cosmoplat
+        driver-class-name: com.mysql.cj.jdbc.Driver
+      application:
+        name: gateway-master
+      jpa:
+        hibernate:
+          ddl-auto: update
+        database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+        show-sql: false
+      security:
+        user:
+          name: admin
+          password: cosmo
+    eureka:
+      instance:
+        prefer-ip-address: true
+      client:
+        fetch-registry: true
+        register-with-eureka: true
+        registry-fetch-interval-seconds: 30
+        service-url:
+          defaultZone: http://eureka.{{ .Release.Namespace }}.svc:8761/eureka
+
+    statistics:
+      enable: true
+      period-seconds: 5
+
+    management:
+      endpoints:
+        web:
+          exposure:
+            include: "*"
+    service:
+      exclude:

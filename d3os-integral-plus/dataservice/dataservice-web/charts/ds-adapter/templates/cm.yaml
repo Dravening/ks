@@ -1,0 +1,93 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "ds-adapter.fullname" . }}
+  labels:
+    app: {{ template "ds-adapter.fullname" . }}
+    chart: '{{ .Chart.Name }}-{{ .Chart.Version }}'
+    release: '{{ .Release.Name }}'
+    heritage: '{{ .Release.Service }}'
+data:
+  application.yml: |-
+    server:
+      port: 9086
+    spring:
+      application:
+        name: API-DSADAPTER-SERVICE
+      datasource:
+        url: jdbc:mysql://mysql-dataservice.{{ .Release.Namespace }}.svc:3306/cosmo_api_manager?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+        username: d3os
+        password: d3os@cosmoplat
+        driver-class-name: com.mysql.cj.jdbc.Driver
+
+      cloud:
+        loadbalancer:
+          retry:
+            enabled: true
+        gateway:
+          discovery:
+            locator:
+              enabled: true
+              lowerCaseServiceId: true
+          default-filters:
+          #  - Elapsed=true
+          #- PrefixPath=/httpbin
+          #- AddResponseHeader=X-Response-Default-Foo, Default-Bar
+        #      - name: RequestRateLimiter
+        #        args:
+        #          redis-rate-limiter.replenishRate: 10
+        #          redis-rate-limiter.burstCapacity: 20
+
+        #      globalcors:
+        #        corsConfigurations:
+        #          '[/**]':
+        #            allowedOrigins: "*"
+        #            allowedMethods:
+        #              - GET
+      jackson:
+        default-property-inclusion: NON_NULL
+        date-format: yyyy-MM-dd hh:mm:ss
+        time-zone: GMT+8
+
+
+    #  elasticsearch:
+    #    rest:
+    #      #      uris: http://localhost:9292
+    #      #      uris: ${tag.service.spring.elasticsearch.rest.uris}
+    #      #      username: ${tag.service.spring.elasticsearch.rest.username}
+    #      #      password: ${tag.service.spring.elasticsearch.rest.password}
+    #      uris: http://172.16.10.19:9292
+    #      username:
+    #      password:
+
+
+    hystrix:
+      command:
+        default:
+          execution:
+            isolation:
+              thread:
+                timeoutInMilliseconds: 60000
+
+    eureka:
+      instance:
+        prefer-ip-address: true
+        lease-expiration-duration-in-seconds: 10
+        lease-renewal-interval-in-seconds: 5
+      client:
+        healthcheck:
+          enabled: true
+        registry-fetch-interval-seconds: 5
+        serviceUrl:
+          defaultZone: http://eureka.{{ .Release.Namespace }}.svc:8761/eureka
+      enabled: true
+
+
+    feign:
+      hystrix:
+        enabled: true
+
+    management:
+      health:
+        elasticsearch:
+          enabled: false
