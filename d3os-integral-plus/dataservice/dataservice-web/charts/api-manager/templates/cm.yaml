@@ -43,6 +43,13 @@ data:
         password: d3os@cosmoplat
         maximum-pool-size: 30
 
+    api-gateway:
+      datasource:
+        url: jdbc:mysql://mysql-dataservice.{{ .Release.Namespace }}.svc:3306/cosmo_gateway?serverTimezone=Asia/Shanghai&characterEncoding=utf-8
+        userName: d3os
+        password: d3os@cosmoplat
+        driverClass: com.mysql.cj.jdbc.Driver
+
     mybatis-plus:
       configuration:
         log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
@@ -93,7 +100,6 @@ data:
       rdDisabled: true
       #路由开关
       routeDefineSwitch: true
-
 
     common:
       mybatis:
