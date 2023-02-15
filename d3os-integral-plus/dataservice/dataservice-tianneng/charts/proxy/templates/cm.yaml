@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "proxy.fullname" . }}
+  labels:
+    app: {{ template "proxy.fullname" . }}
+    chart: '{{ .Chart.Name }}-{{ .Chart.Version }}'
+    release: '{{ .Release.Name }}'
+    heritage: '{{ .Release.Service }}'
+data:
+  application.yml: |-
+    server:
+      servlet:
+        context-path: /cosmo-api
+      tomcat:
+        max-http-form-post-size: -1
+      max-http-header-size: -1
+
+      port: 9094
+
+    spring:
+      application:
+        name: api-proxy-service
+      datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        username: proxy
+        password: TN@2022#!
+        url: jdbc:mysql://192.168.36.57:3306/cosmo_proxy?serverTimezone=Asia/Shanghai
+
+    eureka:
+      instance:
+        prefer-ip-address: true
+      client:
+        fetch-registry: true
+        register-with-eureka: true
+        registry-fetch-interval-seconds: 180
+        service-url:
+          defaultZone: http://eureka.{{ .Release.Namespace }}.svc:8761/eureka
+
+    ribbon:
+      ReadTimeout: 180000
+      ConnectTimeout: 180000
+
+    zuul:
+      host:
+        socket-timeout-millis: 180000
+        connect-timeout-millis: 180000
+        max-total-connections: 500
+      white-urls: /api-auth/login,/**/v2/api-docs,/api-auth/swapToken
+      #  prefix: ${zuul.prefix:/sdh-api}
+      #  strip-prefix: ${zuul.strip-prefix:true}
+      #  ignored-patterns: ${zuul.ignored-patterns:/api-auth/login,/**/v2/api-docs}
+      sensitive-headers: Cookie,Set-Cookie
+      routes:
+        log-service: /api-log/**
+        datasource-service: /api-datasource/**
+        auth-service: /api-auth/**
+        api-manager-service: /api-manager/**
+        hermes-service: /api-hermes/**
+        mirror-data-service: /api-mirror/**
+
+    hystrix:
+      command:
+        default:
+          execution:
+            isolation:
+              thread:
+                timeoutInMilliseconds: 180000
+
+    jwt:
+      token:
+        secret: 4d13002bd1ac7207f4c673e7c2764c57
+        expiration: 43200000
+    common:
+      core:
+        interceptor:
+          login:
+            enable: false
+          feign:
+            enable: false

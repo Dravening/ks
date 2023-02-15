@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "datasource.fullname" . }}
+  labels:
+    app: {{ template "datasource.fullname" . }}
+    chart: '{{ .Chart.Name }}-{{ .Chart.Version }}'
+    release: '{{ .Release.Name }}'
+    heritage: '{{ .Release.Service }}'
+data:
+  application.yml: |-
+    server:
+      port: 9082
+    spring:
+      application:
+        name: datasource-service
+      datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        username: datasource
+        password: TN@2022#!
+        url: jdbc:mysql://192.168.36.57:3306/cosmo_datasource?serverTimezone=Asia/Shanghai
+
+    eureka:
+      instance:
+        prefer-ip-address: true
+      client:
+        fetch-registry: true
+        register-with-eureka: true
+        registry-fetch-interval-seconds: 30
+        service-url:
+          defaultZone: http://eureka.{{ .Release.Namespace }}.svc:8761/eureka
+
+    task:
+      connStatusHealth:
+        cron: ${task.connStatusHealth.cron:0 0 0/1 * * ?}
+    mybatis-plus:
+      configuration:
+        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
