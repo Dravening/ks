@@ -27,10 +27,6 @@ spec:
       serviceAccountName: {{ include "dataservice-web.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      volumes:
-        - name: configs
-          configMap:
-            name: {{ .Chart.Name }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
