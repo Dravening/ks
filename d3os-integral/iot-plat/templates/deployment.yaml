@@ -27,13 +27,28 @@ spec:
       serviceAccountName: {{ include "iot-plat.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+        - name: nic
+          hostPath:
+            path: /sys/class/net
+            type: Directory
+        - name: device
+          hostPath:
+            path: /sys/devices
+            type: Directory
       containers:
         - name: {{ .Chart.Name }}
+          volumeMounts:
+            - name: nic
+              mountPath: /home/net
+              readOnly: true
+            - name: device
+              mountPath: /home/devices
+              readOnly: true
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          # wangfei:
           env:
             - name: MY_NAMESPACE
               valueFrom:
@@ -66,7 +81,6 @@ spec:
               value: {{ .Values.env.useUuc | quote }}
             - name: UUC_AUTH_URL
               value: {{ .Values.env.uucAuthUrl | quote }}
-          # wangfei:
           ports:
             - name: http
               containerPort: 8080

@@ -1,9 +1,6 @@
 apiVersion: v2
 name: iot-plat
 description: iot-plat
-  这是一个整体包，包含iot-plat、pgsql-iotplat、redis-iotplat三个服务。
-  服务没有配置hpa，故推荐仅在测试环境使用。
-  且每个workspace的每个项目中仅能部署一次。
 
 # A chart can be either an 'application' or a 'library' chart.
 #

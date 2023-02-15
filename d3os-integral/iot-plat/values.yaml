@@ -5,10 +5,10 @@
 replicaCount: 1
 
 image:
-  repository: registry-edge.cosmoplat.com/kubesphere/openiot
+  repository: harbor.etianneng.cn/iip/openiot
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
+  tag: "tianneng1.0"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -82,19 +82,18 @@ tolerations: []
 affinity: {}
 
 env:
-  namespace: 'please-enter-your-namespace'
-  postgresUrl: jdbc:postgresql://pgsql-iotplat-cdcpgsqliotplat.$(MY_NAMESPACE):5432/iotplat
+  postgresUrl: 'jdbc:postgresql://192.168.36.55:31321/iotplat'
   postgresUsername: postgres
   postgresPassword: password
   #redis or caffeine
   cacheType: redis
   redisConnectionType: standalone
-  redisHost: redis-iotplat.$(MY_NAMESPACE).svc
+  redisHost: 192.168.36.57
   redisPort: 6379
   redisNodes:
   redisPassword: ''
   #kafka or in-memory
   iotQueueType: kafka
-  iotKafkaServers: my-cluster-kafka-bootstrap.$(MY_NAMESPACE).svc:9092
+  iotKafkaServers: '192.168.36.57:9092'
   useUuc: false
   uucAuthUrl:
