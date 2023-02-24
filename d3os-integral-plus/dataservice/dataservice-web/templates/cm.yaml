@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "dataservice-web.fullname" . }}
+  labels:
+    app: {{ template "dataservice-web.fullname" . }}
+    chart: '{{ .Chart.Name }}-{{ .Chart.Version }}'
+    release: '{{ .Release.Name }}'
+    heritage: '{{ .Release.Service }}'
+data:
+  app.config.js: |-
+    /**
+      * 海尔 应用配置文件  DataService
+      */
+    window.HAIER_APP_CONFIG = {
+      // 系统标识 不要改
+      APP: 'DataService',
+      // 单点登录: 是否开启UUC单点登录 共享Cookie方式 与【UUC_IS_OPEN】配置互斥
+      UUC_IS_OPEN_PUBLIC_COOKIE: false,
+      // 单点登录: 是否开启UUC单点登录 跳转方式 与【UUC_IS_OPEN_PUBLIC_COOKIE】配置互斥
+      UUC_IS_OPEN: true,
+      // 单点登录: UUC统一登录地址
+      UUC_URL: 'http://uuc-saas-d3os.cosmoplat.com/duc/login/',
+      // UI: favicon.ico图标  如果为空字符显示原系统图标；eg：'/client_config/tianneng/favicon.ico'
+      UI_FAVICON: '',
+      // UI: logo图片地址 如果为空字符显示原系统图标；eg：'/client_config/tianneng/logo.png'
+      UI_LOGO_URL: '',
+      // UI: logo名称 如果logo是带标题的,那么不用加
+      UI_LOGO_TITLE: '',
+    };
