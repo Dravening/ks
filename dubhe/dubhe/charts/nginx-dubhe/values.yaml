@@ -8,7 +8,7 @@ image:
   repository: registry-edge.cosmoplat.com/dubhe/nginx-dubhe
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
+  tag: "20230303"
 
 imagePullSecrets: []
 nameOverride: ""

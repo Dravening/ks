@@ -28,10 +28,6 @@ spec:
       serviceAccountName: {{ include "es-dubhe.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      volumes:
-        - name: configs
-          configMap:
-            name: {{ template "es-dubhe.fullname" . }}
       initContainers:
         - name: fix-permissions
           image: busybox
@@ -61,7 +57,7 @@ spec:
           lifecycle:
             postStart:
               exec:
-                command: [ "/bin/bash", "-c", "curl -X PUT http://es-dubhe.dubhe-test.svc:9200/dataset_text_test?pretty" ]
+                command: [ "/bin/bash", "-c", "curl -X PUT http://localhost.svc:9200/dataset_text_test?pretty" ]
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
   {{- if .Values.persistence.enabled }}

@@ -37,6 +37,12 @@ spec:
           env:
             - name: TZ
               value: Asia/Shanghai
+            - name: MYSQL_ROOT_PASSWORD
+              value: d3os@cosmoplat
+            - name: character-set-server
+              value: utf8mb4
+            - name: collation-server
+              value: utf8mb4_general_ci
           ports:
             - name: http
               containerPort: {{ .Values.service.port | default 3306 }}
