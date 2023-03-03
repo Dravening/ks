@@ -1,4 +1,4 @@
-# Default values for mysql-dubhe.
+# Default values for es-dubhe.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -12,7 +12,7 @@ image:
 
 imagePullSecrets: []
 nameOverride: ""
-fullnameOverride: "mysql-dubhe"
+fullnameOverride: "es-dubhe"
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -38,8 +38,8 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  name: mysql-dubhe
-  port: 3306
+  name: es-dubhe
+  port: 9200
 
 ingress:
   enabled: false

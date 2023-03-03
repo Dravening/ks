@@ -9,3 +9,8 @@ metadata:
     heritage: '{{ .Release.Service }}'
 data:
   elasticsearch.yml: |-
+    cluster.name: "docker-cluster"
+    network.host: 0.0.0.0
+    discovery.seed_hosts: ["localhost","0.0.0.0"]
+    node.name: node-1
+    cluster.initial_master_nodes: ["node-1"]

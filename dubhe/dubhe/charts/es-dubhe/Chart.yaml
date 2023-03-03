@@ -1,6 +1,6 @@
 apiVersion: v2
-name: mysql-dubhe
-description: mysql-dubhe
+name: es-dubhe
+description: es-dubhe
 
 # A chart can be either an 'application' or a 'library' chart.
 #

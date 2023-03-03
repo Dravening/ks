@@ -5,7 +5,7 @@ image:
 
 imagePullSecrets: []
 nameOverride: ""
-fullnameOverride: ""
+fullnameOverride: "dubhe-redis"
 
 persistence:
   size: 1Gi

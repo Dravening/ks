@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "mysql-dubhe.fullname" . }}
+  name: {{ include "es-dubhe.fullname" . }}
   labels:
-    {{- include "mysql-dubhe.labels" . | nindent 4 }}
+    {{- include "es-dubhe.labels" . | nindent 4 }}
 spec:
   serviceName: {{ .Values.service.name }}
   {{- if not .Values.autoscaling.enabled }}
@@ -11,7 +11,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "mysql-dubhe.selectorLabels" . | nindent 6 }}
+      {{- include "es-dubhe.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -19,13 +19,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "mysql-dubhe.selectorLabels" . | nindent 8 }}
+        {{- include "es-dubhe.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "mysql-dubhe.serviceAccountName" . }}
+      serviceAccountName: {{ include "es-dubhe.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       volumes:
@@ -43,16 +43,24 @@ spec:
               value: Asia/Shanghai
           ports:
             - name: http
-              containerPort: {{ .Values.service.port | default 3306 }}
+              containerPort: {{ .Values.service.port | default 9200 }}
               protocol: TCP
+            - name: http2
+              containerPort: 9300
+              protocol: TCP
+
           {{- if .Values.persistence.enabled }}
           volumeMounts:
+            - name: configs
+              mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+              subPath: elasticsearch.yml
             - name: data
               mountPath: /usr/share/elasticsearch/data
-            - name: configs
-              mountPath: /dataservice/nginx-dubhe/config/application.yml
-              subPath: application.yml
           {{- end }}
+          lifecycle:
+            postStart:
+              exec:
+                command: [ "/bin/bash", "-c", "curl -X PUT http://localhost:9200/dataset_text_test?pretty" ]
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
   {{- if .Values.persistence.enabled }}
