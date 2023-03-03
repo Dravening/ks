@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "minio-dubhe.fullname" . }}
+  labels:
+    app: {{ template "minio-dubhe.name" . }}
+    chart: {{ template "minio-dubhe.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  initialize: |-
+{{ include (print $.Template.BasePath "/_helper_create_bucket.txt") . | indent 4 }}

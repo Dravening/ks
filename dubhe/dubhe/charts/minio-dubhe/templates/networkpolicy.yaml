@@ -1,0 +1,25 @@
+{{- if .Values.networkPolicy.enabled }}
+kind: NetworkPolicy
+apiVersion: {{ template "minio-dubhe.networkPolicy.apiVersion" . }}
+metadata:
+  name: {{ template "minio-dubhe.fullname" . }}
+  labels:
+    app: {{ template "minio-dubhe.name" . }}
+    chart: {{ template "minio-dubhe.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "minio-dubhe.name" . }}
+      release: {{ .Release.Name }}
+  ingress:
+    - ports:
+        - port: {{ .Values.service.port }}
+      {{- if not .Values.networkPolicy.allowExternal }}
+      from:
+        - podSelector:
+            matchLabels:
+              {{ template "minio-dubhe.name" . }}-client: "true"
+      {{- end }}
+{{- end }}

@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "nacos-dubhe.fullname" . }}
+  labels:
+    app: {{ template "nacos-dubhe.fullname" . }}
+    chart: '{{ .Chart.Name }}-{{ .Chart.Version }}'
+    release: '{{ .Release.Name }}'
+    heritage: '{{ .Release.Service }}'
+data:
+  application.yml: |-
+    server:
+      port: 9082
+    spring:
+      application:
+        name: nacos-dubhe-service
+      nacos-dubhe:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        username: d3os
+        password: d3os@cosmoplat
+        url: jdbc:mysql://mysql-dataservice.{{ .Release.Namespace }}.svc:3306/cosmo_nacos-dubhe?serverTimezone=Asia/Shanghai
+
+    eureka:
+      instance:
+        prefer-ip-address: true
+      client:
+        fetch-registry: true
+        register-with-eureka: true
+        registry-fetch-interval-seconds: 30
+        service-url:
+          defaultZone: http://eureka.{{ .Release.Namespace }}.svc:8761/eureka
+
+    task:
+      connStatusHealth:
+        cron: ${task.connStatusHealth.cron:0 0 0/1 * * ?}
+    mybatis-plus:
+      configuration:
+        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
