@@ -63,7 +63,7 @@ priorityClassName: ""
 ##
 existingSecret: ""
 accessKey: "admin"
-secretKey: "123@abc.com"
+secretKey: "d3os@cosmoplat"
 certsPath: "/etc/minio/certs/"
 configPathmc: "/etc/minio/mc/"
 mountPath: "/export"

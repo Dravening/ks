@@ -69,7 +69,7 @@ spec:
           lifecycle:
             postStart:
               exec:
-                command: [ "/bin/bash", "-c", "sleep 20 && curl -X PUT http://es-dubhe:9200/dataset_text_test?pretty" ]
+                command: [ "/bin/bash", "-c", "sleep 30 && curl -X PUT http://localhost:9200/dataset_text_test?pretty" ]
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
   {{- if .Values.persistence.enabled }}

@@ -35,8 +35,65 @@ spec:
         - name: {{ .Chart.Name }}
           volumeMounts:
             - name: configs
-              mountPath: /dataservice/nacos-dubhe/config/application.yml
-              subPath: application.yml
+              mountPath: /home/admin.yaml
+              subPath: admin.yml
+            - name: configs
+              mountPath: /home/auth.yaml
+              subPath: auth.yml
+            - name: configs
+              mountPath: /home/common-biz.yaml
+              subPath: common-biz.yaml
+            - name: configs
+              mountPath: /home/common-k8s.yaml
+              subPath: common-k8s.yaml
+            - name: configs
+              mountPath: /home/common-recycle.yaml
+              subPath: common-recycle.yaml
+            - name: configs
+              mountPath: /home/common-shardingjdbc.yaml
+              subPath: common-shardingjdbc.yaml
+            - name: configs
+              mountPath: /home/dubhe-algorithm.yaml
+              subPath: dubhe-algorithm.yaml
+            - name: configs
+              mountPath: /home/dubhe-data.yaml
+              subPath: dubhe-data.yaml
+            - name: configs
+              mountPath: /home/dubhe-data-dcm.yaml
+              subPath: dubhe-data-dcm.yaml
+            - name: configs
+              mountPath: /home/dubhe-data-task.yaml
+              subPath: dubhe-data-task.yaml
+            - name: configs
+              mountPath: /home/dubhe-model.yaml
+              subPath: dubhe-model.yaml
+            - name: configs
+              mountPath: /home/dubhe-optimize.yaml
+              subPath: dubhe-optimize.yaml
+            - name: configs
+              mountPath: /home/dubhe-serving.yaml
+              subPath: dubhe-serving.yaml
+            - name: configs
+              mountPath: /home/dubhe-serving-gateway.yaml
+              subPath: dubhe-serving-gateway.yaml
+            - name: configs
+              mountPath: /home/dubhe-tadl.yaml
+              subPath: dubhe-tadl.yaml
+            - name: configs
+              mountPath: /home/dubhe-terminal.yaml
+              subPath: dubhe-terminal.yaml
+            - name: configs
+              mountPath: /home/dubhe-train.yaml
+              subPath: dubhe-train.yaml
+            - name: configs
+              mountPath: /home/gateway.yaml
+              subPath: gateway.yaml
+            - name: configs
+              mountPath: /home/image.yaml
+              subPath: image.yaml
+            - name: configs
+              mountPath: /home/measure.yaml
+              subPath: measure.yaml
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
